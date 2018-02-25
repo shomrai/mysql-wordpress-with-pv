@@ -5,14 +5,10 @@ curl -Ls https://raw.githubusercontent.com/shomrai/script/master/icp21_kubectl-s
 
 if $clean ; then
    kubectl delete secret mysql-pass
-   kubectl delete service wordpress-mysql
-   kubectl delete service wordpress
-   kubectl delete deployment wordpress-mysql
-   kubectl delete deployment wordpress
-   kubectl delete pvc mysql-pv-claim
-   kubectl delete pvc wp-pv-claim
-   kubectl delete pv pv-1
-   kubectl delete pv pv-2
+   kubectl delete services   wordpress wordpress-mysql
+   kubectl delete deployment wordpress wordpress-mysql
+   kubectl delete pvc mysql-pv-claim wp-pv-claim
+   kubectl delete pv pv-1 pv-2
 fi
 
 if $cleanonly ; then
