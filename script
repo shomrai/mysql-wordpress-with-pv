@@ -1,0 +1,48 @@
+Based on the kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume
+Targeted to deploy on ICP
+
+cat <<START
+=================================================================
+  ===> START of BUILD $BUILD_NUMBER <====
+==================================================================
+START
+
+cat <<ICP
+   ===> SETUP KUBECTL <===
+ICP
+curl -Ls https://raw.githubusercontent.com/shomrai/script/master/icp21_kubectl-setup|bash
+
+
+if $clean ; then
+   kubectl delete secret mysql-pass
+   kubectl delete service wordpress-mysql
+   kubectl delete service wordpress
+   kubectl delete deployment wordpress-mysql
+   kubectl delete deployment wordpress
+   kubectl delete pvc mysql-pv-claim
+   kubectl delete pvc wp-pv-claim
+   kubectl delete pv pv-1
+   kubectl delete pv pv-2
+fi
+
+if $cleanonly ; then
+   exit 1
+fi
+
+SQL_PWD=admin
+kubectl create secret generic mysql-pass --from-literal=password=$SQL_PWD
+kubectl get secrets|grep mysql
+
+kubectl create -f local-pv-s.yaml
+kubectl get pv
+
+kubectl create -f mysql-deployment.yaml
+kubectl create -f wordpress-deployment.yaml
+sleep 5
+NodePort=`kubectl describe service wordpress|awk '/NodePort:/ {print $3};'|cut -f1 -d/`
+
+cat <<URL
+=================================================================
+  WORDPRESS URL ==> 10.85.3.102:$NodePort
+==================================================================
+URL
