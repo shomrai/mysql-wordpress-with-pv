@@ -1,17 +1,7 @@
 Based on the kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume
 Targeted to deploy on ICP
 
-cat <<START
-=================================================================
-  ===> START of BUILD $BUILD_NUMBER <====
-==================================================================
-START
-
-cat <<ICP
-   ===> SETUP KUBECTL <===
-ICP
 curl -Ls https://raw.githubusercontent.com/shomrai/script/master/icp21_kubectl-setup|bash
-
 
 if $clean ; then
    kubectl delete secret mysql-pass
